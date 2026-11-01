@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # The tests run the bridge against a fake local Telegram server and stub
+      # out Claude and speech-to-text, so only pytest is needed. The runtime
+      # packages (claude-agent-sdk, faster-whisper) are not installed here.
+      - name: Install test dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run tests (no bot token or API key needed)
+        run: pytest -v
